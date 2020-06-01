@@ -81,6 +81,27 @@ const updateDog = async ({
   response.body = { msg: `Cannot find dog ${params.name}` };
 }
 
+const removeDog = ({
+  params,
+  response
+}: {
+  params: {
+    name: string
+  },
+  response: any
+}) => {
+  const lengthBefore = dogs.length;
+  dogs = dogs.filter(dog => dog.name !== params.name);
+
+  if (dogs.length === lengthBefore) {
+    response.status = 400;
+    response.body = { msg: `Cannot find dog ${params.name}`};
+    return;
+  }
+  response.body = { msg: 'OK' };
+  response.status = 200;
+}
+
 const router = new Router();
 
 router
@@ -88,8 +109,7 @@ router
   .get('/dogs/:name', getDog)
   .post('/dogs', addDog)
   .put('/dogs/:name', updateDog)
-  // .delete('/dogs/:name', removeDog)
-
+  .delete('/dogs/:name', removeDog)
 
 const app = new Application();
 
