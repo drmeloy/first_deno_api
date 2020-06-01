@@ -19,7 +19,39 @@ let dogs: Array<Dog> = [
   }
 ]
 
+const getDogs = ({ response }: { response: any }) => {
+  response.body = dogs;
+}
+
+const getDog = ({
+  params,
+  response
+}: {
+  params: {
+    name: string
+  },
+  response: any
+}) => {
+  const dog = dogs.filter(dog => dog.name === params.name);
+  if (dog.length) {
+    response.status = 200;
+    response.body = dog[0];
+    return;
+  }
+  response.status = 400;
+  response.body = { msg: `Cannot find dog ${params.name}` };
+}
+
 const router = new Router();
+
+router
+  .get('/dogs', getDogs)
+  .get('/dogs/:name', getDog)
+  // .post('/dogs', addDog)
+  // .put('/dogs/:name', updateDog)
+  // .delete('/dogs/:name', removeDog)
+
+
 const app = new Application();
 
 app.use(router.routes());
