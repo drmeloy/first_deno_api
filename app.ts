@@ -42,12 +42,26 @@ const getDog = ({
   response.body = { msg: `Cannot find dog ${params.name}` };
 }
 
+const addDog = async ({
+  request,
+  response
+}: {
+  request: any,
+  response: any
+}) => {
+  const body = await request.body();
+  const dog: Dog = body.value;
+  dogs.push(dog);
+  response.body = { msg: 'OK' };
+  response.status = 200;
+}
+
 const router = new Router();
 
 router
   .get('/dogs', getDogs)
   .get('/dogs/:name', getDog)
-  // .post('/dogs', addDog)
+  .post('/dogs', addDog)
   // .put('/dogs/:name', updateDog)
   // .delete('/dogs/:name', removeDog)
 
